@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Add filter user for doing mail filtering
+#-----------------------------------------
+
+getent group filter >/dev/null || groupadd -r filter
+getent passwd filter >/dev/null || useradd -r -g filter -d /var/spool/filter -s /sbin/nologin -c "Mail Filter" filter

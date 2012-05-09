@@ -1,0 +1,21 @@
+#!/bin/sh
+
+CHECK=`postconf inet_interfaces | grep "inet_interfaces = localhost"`
+if [ -n "$CHECK" ]; then
+    logger -p local6.notice -t installer "app-mail-routing-core - started SMTP listener on all interfaces"
+    /usr/sbin/postconf -e "inet_interfaces = all"
+fi
+
+CHECK=`postconf mailbox_transport | grep "mailbox_transport =[[:space:]]*$"`
+if [ -n "$CHECK" ]; then
+    logger -p local6.notice -t installer "app-mail-routing-core - added mail post-filter"
+    /usr/sbin/postconf -e "mailbox_transport = mailpostfilter"
+fi
+
+CHECK=`postconf content_filter | grep "content_filter =[[:space:]]*$"`
+if [ -n "$CHECK" ]; then
+    logger -p local6.notice -t installer "app-mail-routing-core - added mail pre-filter"
+    /usr/sbin/postconf -e "content_filter = mailprefilter"
+fi
+
+/sbin/service postfix condrestart >/dev/null 2>&1
