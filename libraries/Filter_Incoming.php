@@ -105,8 +105,7 @@ class Filter_Incoming extends \Filter
         $add_headers = array();
         $headers_done = false;
 
-        $headers_done = false;
-        while (!feof($inh) && !$headers_done) {
+        while (!feof($inh)) {
             $buffer = fgets($inh, 8192);
             $line = rtrim( $buffer, "\r\n");
             if ($line == '') {

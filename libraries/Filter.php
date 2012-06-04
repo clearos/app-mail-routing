@@ -250,7 +250,7 @@ class Filter
     function _initTmp()
     {
         /* Temp file for storing the message */
-        $this->_tmpfile = @tempnam($this->_tmpdir, 'mailfilter' . preg_replace('/.*\\//', '', get_class($this)) . '.');
+        $this->_tmpfile = @tempnam($this->_tmpdir, 'mailfilter' . preg_replace('/\\\/', '_', get_class($this)) . '.');
         $this->_tmpfh = @fopen($this->_tmpfile, "w");
         if( !$this->_tmpfh ) {
             $msg = $php_errormsg;
