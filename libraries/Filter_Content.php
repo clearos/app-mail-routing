@@ -172,9 +172,7 @@ class Filter_Content extends \Filter
                 $args .= ' --htmltoo';
                 $args .= ' --force-for-bad-html';
                 shell_exec($cmd . $args);
-                Horde::logMessage(_("added disclaimer"), __FILE__, __LINE__, PEAR_LOG_DEBUG);
-            } else {
-                Horde::logMessage(_("skipped disclaimer"), __FILE__, __LINE__, PEAR_LOG_DEBUG);
+                clearos_log("mailfilter", "added disclaimer");
             }
         }
         // Point Clark Networks -- end
@@ -511,8 +509,7 @@ function verify_sender($sasluser, $sender, $fromhdr, $client_addr) {
 
         if ($sasluser) {
             if (!in_array(strtolower($from), $allowed_addrs)) {
-                Horde::logMessage(sprintf(_("%s is not an allowed From address for %s"), 
-                                          $from, $sasluser), __FILE__, __LINE__, PEAR_LOG_DEBUG);
+                clearos_log(sprintf(_("%s is not an allowed From address for %s"), $from, $sasluser));
                 return false;
             }
         } else {
@@ -521,13 +518,11 @@ function verify_sender($sasluser, $sender, $fromhdr, $client_addr) {
                     || ($verify_subdomains
                         && substr($fromdom, -strlen($domain)-1) == ".$domain")) {
                     if ($reject_forged_from_header) {
-                        Horde::logMessage(sprintf(_("%s is not an allowed From address for unauthenticated users."), 
-                                                  $from), __FILE__, __LINE__, PEAR_LOG_DEBUG);
+                        clearos_log(sprintf(_("%s is not an allowed From address for unauthenticated users."), $from));
                         return false;
                     } else {
                         /* Rewrite */
-                        Horde::logMessage(sprintf(_("%s is not an allowed From address for unauthenticated users, rewriting."), 
-                                                  $from), __FILE__, __LINE__, PEAR_LOG_DEBUG);
+                        clearos_log(sprintf(_("%s is not an allowed From address for unauthenticated users, rewriting."), $from));
                         if (strpos( $fromhdr, $untrusted )===false) {
                             if (property_exists($adr, 'personal')) {
                                 $name = str_replace(array("\\", '"'), 
