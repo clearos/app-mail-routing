@@ -3,9 +3,9 @@
 /**
  * Mail filter class based on Kolab.
  *
- * @category   Apps
- * @package    Mail_Routing
- * @subpackage Libraries
+ * @category   apps
+ * @package    mail-routing
+ * @subpackage libraries
  * @author     Kolab http://www.kolab.org
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2012 ClearFoundation
@@ -65,9 +65,9 @@ define('RM_STATE_READING_BODY',   5 );
 /**
  * Mail filter class based on Kolab.
  *
- * @category   Apps
- * @package    Mail_Routing
- * @subpackage Libraries
+ * @category   apps
+ * @package    mail-routing
+ * @subpackage libraries
  * @author     Kolab http://www.kolab.org
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2012 ClearFoundation

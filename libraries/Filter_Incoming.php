@@ -3,9 +3,9 @@
 /**
  * Mail pre-delivery filter.
  *
- * @category   Apps
- * @package    Mail_Routing
- * @subpackage Libraries
+ * @category   apps
+ * @package    mail-routing
+ * @subpackage libraries
  * @author     Kolab http://www.kolab.org
  * @author     ClearFoundation <developer@clearfoundation.com>
  * @copyright  2012 ClearFoundation
