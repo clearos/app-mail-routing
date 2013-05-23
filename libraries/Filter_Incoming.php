@@ -129,6 +129,9 @@ class Filter_Incoming extends \Filter
                                     OUT_LOG | EX_TEMPFAIL);
         }
 
+        if (file_exists('/var/clearos/mail_archive/enabled'))
+            copy($this->_tmpfile, '/var/clearos/mail_archive/messages/' . preg_replace(array('/^</', '/>$/'), array('', ''), $this->_id));
+
         /* Check if we still have recipients */
         if (empty($this->_recipients)) {
             clearos_log("mailfilter", "No recipients left.");

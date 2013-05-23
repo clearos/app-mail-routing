@@ -113,7 +113,7 @@ class Filter_Content extends \Filter
                     } else if (preg_match('/^Subject: (.*)/i', $line, $regs)) {
                         $subject = $regs[1];
                         $state = RM_STATE_READING_SUBJECT;
-                    } else if (preg_match('/^Message-ID: (.*)/', $line, $regs)) {
+                    } else if (preg_match('/^Message-ID: (.*)/i', $line, $regs)) {
                         $this->_id = $regs[1];
                     }
                     break;
@@ -151,6 +151,9 @@ class Filter_Content extends \Filter
                                             $this->_tmpfile, $msg),
                                     OUT_LOG | EX_IOERR);
         }
+
+        if (file_exists('/var/clearos/mail_archive/enabled'))
+            copy($this->_tmpfile, '/var/clearos/mail_archive/messages/' . preg_replace(array('/^</', '/>$/'), array('', ''), $this->_id));
 
         // Point Clark Networks -- start
         // - add disclaimer
