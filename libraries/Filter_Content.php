@@ -178,7 +178,7 @@ class Filter_Content extends \Filter
         // Point Clark Networks -- end
 
         $result = $this->deliver($rewrittenfrom);
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             return $result;
         }
     }
@@ -509,7 +509,7 @@ function verify_sender($sasluser, $sender, $fromhdr, $client_addr) {
 
         if ($sasluser) {
             if (!in_array(strtolower($from), $allowed_addrs)) {
-                clearos_log(sprintf(_("%s is not an allowed From address for %s"), $from, $sasluser));
+                clearos_log('mailfilter', sprintf(_("%s is not an allowed From address for %s"), $from, $sasluser));
                 return false;
             }
         } else {
@@ -518,11 +518,11 @@ function verify_sender($sasluser, $sender, $fromhdr, $client_addr) {
                     || ($verify_subdomains
                         && substr($fromdom, -strlen($domain)-1) == ".$domain")) {
                     if ($reject_forged_from_header) {
-                        clearos_log(sprintf(_("%s is not an allowed From address for unauthenticated users."), $from));
+                        clearos_log('mailfilter', sprintf(_("%s is not an allowed From address for unauthenticated users."), $from));
                         return false;
                     } else {
                         /* Rewrite */
-                        clearos_log(sprintf(_("%s is not an allowed From address for unauthenticated users, rewriting."), $from));
+                        clearos_log('mailfilter', sprintf(_("%s is not an allowed From address for unauthenticated users, rewriting."), $from));
                         if (strpos( $fromhdr, $untrusted )===false) {
                             if (property_exists($adr, 'personal')) {
                                 $name = str_replace(array("\\", '"'), 

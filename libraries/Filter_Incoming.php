@@ -116,7 +116,7 @@ class Filter_Incoming extends \Filter
             }
             if (@fwrite($this->_tmpfh, $buffer) === false) {
                 $msg = $php_errormsg;
-                return PEAR::raiseError(sprintf(_("Error: Could not write to %s: %s"),
+                return \PEAR::raiseError(sprintf(_("Error: Could not write to %s: %s"),
                                                 $this->_tmpfile, $msg),
                                         OUT_LOG | EX_TEMPFAIL);
             }
@@ -124,18 +124,18 @@ class Filter_Incoming extends \Filter
 
         if (@fclose($this->_tmpfh) === false) {
             $msg = $php_errormsg;
-            return PEAR::raiseError(sprintf(_("Error: Failed closing %s: %s"),
+            return \PEAR::raiseError(sprintf(_("Error: Failed closing %s: %s"),
                                             $this->_tmpfile, $msg),
                                     OUT_LOG | EX_TEMPFAIL);
         }
 
         /* Check if we still have recipients */
         if (empty($this->_recipients)) {
-            clearos_log(_("No recipients left."));
+            clearos_log("mailfilter", "No recipients left.");
             return;
         } else {
             $result = $this->deliver();
-            if ($result instanceof PEAR_Error) {
+            if ($result instanceof \PEAR_Error) {
                 return $result;
             }
         }
@@ -186,13 +186,13 @@ class Filter_Incoming extends \Filter
         $tmpf = @fopen($this->_tmpfile, 'r');
         if (!$tmpf) {
             $msg = $php_errormsg;
-            return PEAR::raiseError(sprintf(_("Error: Could not open %s for writing: %s"),
+            return \PEAR::raiseError(sprintf(_("Error: Could not open %s for writing: %s"),
                                             $this->_tmpfile, $msg),
                                     OUT_LOG | EX_TEMPFAIL);
         }
 
         $result = $transport->start($this->_sender, $this->_recipients);
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             return $this->_rewriteCode($result);
         }
         
@@ -205,13 +205,13 @@ class Filter_Incoming extends \Filter
                     $this->_add_headers = array($this->_add_headers);
                 foreach ($this->_add_headers as $h) {
                     $result = $transport->data("$h\r\n");
-                    if ($result instanceof PEAR_Error) {
+                    if ($result instanceof \PEAR_Error) {
                         return $this->_rewriteCode($result);
                     }
                 }
             }
             $result = $transport->data($buffer);
-            if ($result instanceof PEAR_Error) {
+            if ($result instanceof \PEAR_Error) {
                 return $this->_rewriteCode($result);
             }
         }
@@ -231,7 +231,7 @@ class Filter_Incoming extends \Filter
                 }
             }
             $result = $transport->data($buffer);
-            if ($result instanceof PEAR_Error) {
+            if ($result instanceof \PEAR_Error) {
                 return $this->_rewriteCode($result);
             }
         }

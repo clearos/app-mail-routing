@@ -158,9 +158,10 @@ class Transport
     function data($data) {
         $this->quotedataline($data);
         $result = $this->transport->_send($data);
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             return $result;
         }
+
         return true;
     }
 
@@ -173,11 +174,11 @@ class Transport
         }
         
         $result = $this->transport->_send($dot);
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             return $result;
         }
         $result = $this->transport->_parseResponse(250);
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             return $result;
         }
         $this->transport->disconnect();
