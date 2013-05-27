@@ -265,9 +265,12 @@ class Filter_Content extends \Filter
                 $len++;
             }
             $result = $transport->data($buffer);
-            if ($result instanceof \PEAR_Error) {
+            // TODO: this seem to generate false positives?  LMTP only?
+            /*
+            if ($result instanceof PEAR_Error) {
                 return $this->_rewriteCode($result);
             }
+            */
         }
         return $transport->end();
     }
