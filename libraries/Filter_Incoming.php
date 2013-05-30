@@ -129,8 +129,14 @@ class Filter_Incoming extends \Filter
                                     OUT_LOG | EX_TEMPFAIL);
         }
 
-        if (file_exists('/var/clearos/mail_archive/enabled'))
-            copy($this->_tmpfile, '/var/clearos/mail_archive/messages/' . preg_replace(array('/^</', '/>$/'), array('', ''), $this->_id));
+        if (file_exists('/var/clearos/mail_archive/enabled')) {
+            $msg_filename = '/var/clearos/mail_archive/messages/' . preg_replace(array('/^</', '/>$/'), array('', ''), $this->_id);
+            if (!file_exists($msg_filename))
+                copy($this->_tmpfile, $msg_filename);
+            // We'll use this custom header to populate delivered-to address in database metadata
+            $delivered_to = implode(',', $this->_recipients);
+            exec("/bin/sed -i -e 's/^\(Message-Id.*\)$/X-Clear-Delivered-To-" . rand(0, 1000) . ": $delivered_to \\n\\1/i' $msg_filename");
+        }
 
         /* Check if we still have recipients */
         if (empty($this->_recipients)) {
