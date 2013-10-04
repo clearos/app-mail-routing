@@ -152,8 +152,14 @@ class Filter_Content extends \Filter
                                     OUT_LOG | EX_IOERR);
         }
 
-        if (file_exists('/var/clearos/mail_archive/enabled'))
-            copy($this->_tmpfile, '/var/clearos/mail_archive/messages/' . preg_replace(array('/^.*</', '/>.*$/'), array('', ''), $this->_id));
+        if (file_exists('/var/clearos/mail_archive/enabled')) {
+            if (!isset($this->_id) || $this->_id == '')
+                $msg_filename = '/var/clearos/mail_archive/messages/' . date('Y_m_d_H_i', time()) . '_' . rand(0, 10000);
+            else
+                $msg_filename = '/var/clearos/mail_archive/messages/' . preg_replace(array('/^.*</', '/>.*$/', '/\//'), array('', '', ''), $this->_id);
+            if (!file_exists($msg_filename))
+                copy($this->_tmpfile, $msg_filename);
+        }
 
         // Point Clark Networks -- start
         // - add disclaimer
