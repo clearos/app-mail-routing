@@ -130,7 +130,7 @@ class Filter_Incoming extends \Filter
         }
 
         if (file_exists('/var/clearos/mail_archive/enabled')) {
-            $msg_filename = '/var/clearos/mail_archive/messages/' . preg_replace(array('/^</', '/>$/'), array('', ''), $this->_id);
+            $msg_filename = '/var/clearos/mail_archive/messages/' . preg_replace(array('/^.*</', '/>.*$/'), array('', ''), $this->_id);
             if (!file_exists($msg_filename))
                 copy($this->_tmpfile, $msg_filename);
             // We'll use this custom header to populate delivered-to address in database metadata

@@ -153,7 +153,7 @@ class Filter_Content extends \Filter
         }
 
         if (file_exists('/var/clearos/mail_archive/enabled'))
-            copy($this->_tmpfile, '/var/clearos/mail_archive/messages/' . preg_replace(array('/^</', '/>$/'), array('', ''), $this->_id));
+            copy($this->_tmpfile, '/var/clearos/mail_archive/messages/' . preg_replace(array('/^.*</', '/>.*$/'), array('', ''), $this->_id));
 
         // Point Clark Networks -- start
         // - add disclaimer
