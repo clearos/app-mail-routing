@@ -1,7 +1,7 @@
 
 Name: app-mail-routing
 Epoch: 1
-Version: 1.4.48
+Version: 1.4.49
 Release: 1%{dist}
 Summary: Mail Routing - Core
 License: LGPLv3
@@ -63,7 +63,6 @@ exit 0
 %files core
 %defattr(-,root,root)
 %exclude /usr/clearos/apps/mail_routing/packaging
-%exclude /usr/clearos/apps/mail_routing/tests
 %dir /usr/clearos/apps/mail_routing
 %dir /var/clearos/mail_routing
 %dir /var/clearos/mail_routing/backup
