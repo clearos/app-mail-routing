@@ -161,35 +161,6 @@ class Filter_Incoming extends \Filter
         $host = "localhost";
         $port = 2003;
 
-        /*
-        $pcnverify = verify_recipient($this->_recipients[0]);
-
-        if ($pcnverify == PCN_USER_EXISTS) {
-            if (isset($conf['spam_quarantine_mailbox']) && !empty($conf['spam_quarantine_mailbox'])) {
-                clearos_log("mailfilter", "Directing message to spam quarantine.");
-                $this->_recipients[0] = $conf['spam_quarantine_mailbox'];
-                $port = 2003;
-            } else {
-                clearos_log("mailfilter", "Directing message to mail delivery.");
-                $port = 2003;
-            }
-        } else if ($pcnverify == PCN_NO_SUCH_USER) {
-            if (isset($conf['catch_all_mailbox']) && !empty($conf['catch_all_mailbox'])) {
-                clearos_log("mailfilter", "Redirecting message to catch-all mailbox");
-                $port = 2003;
-                $this->_recipients[0] = $conf['catch_all_mailbox'];
-            } else {
-                clearos_log("mailfilter", sprintf(_("Bouncing message to %s"), $this->_recipients[0]));
-                return PEAR::raiseError(sprintf(_("Fatal: 550- Mailbox does not exist")), OUT_LOG | EX_NOUSER);
-            }
-        } else {
-            clearos_log("mailfilter", "Directing unverified message to mail delivery");
-            $port = 2003;
-        }
-        */
-
-        // Point Clark Networks -- end
-
         $transport = $this->_getTransport($host, $port);
 
         $tmpf = @fopen($this->_tmpfile, 'r');
