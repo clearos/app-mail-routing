@@ -1,7 +1,7 @@
 
 Name: app-mail-routing
 Epoch: 1
-Version: 1.4.49
+Version: 1.6.5
 Release: 1%{dist}
 Summary: Mail Routing - Core
 License: LGPLv3
