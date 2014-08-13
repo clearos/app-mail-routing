@@ -102,7 +102,7 @@ class Filter
         global $conf;
 
         /* Always display all possible problems */
-        ini_set('error_reporting', E_ALL);
+        ini_set('error_reporting', E_ALL ^ E_STRICT);
         ini_set('track_errors', '1');
 
         /* Setup error logging */
