@@ -158,31 +158,6 @@ class Filter_Content extends \Filter
                 copy($this->_tmpfile, $msg_filename);
         }
 
-        // Point Clark Networks -- start
-        // - add disclaimer
-
-        $add_disclaimer = false;
-
-        for( $i = 0; $i < count($this->_recipients); $i++ ) {
-            $this->_recipients[$i] = strtolower($this->_recipients[$i]);
-            if (! is_my_domain($this->_recipients[$i])) {
-                $add_disclaimer = true;
-            }
-        }
-
-        if (file_exists("/usr/bin/altermime")) {
-            if ($add_disclaimer && file_exists("/etc/altermime/disclaimer.txt") && file_exists("/etc/altermime/disclaimer.state")) {
-                $cmd = '/usr/bin/altermime';
-                $args = ' --input=' . $this->_tmpfile;
-                $args .= ' --disclaimer=/etc/altermime/disclaimer.txt';
-                $args .= ' --htmltoo';
-                $args .= ' --force-for-bad-html';
-                shell_exec($cmd . $args);
-                clearos_log("mailfilter", "added disclaimer");
-            }
-        }
-        // Point Clark Networks -- end
-
         $result = $this->deliver($rewrittenfrom);
         if ($result instanceof \PEAR_Error) {
             return $result;
@@ -277,43 +252,6 @@ class Filter_Content extends \Filter
         }
         return $transport->end();
     }
-}
-
-// Cleanup function
-function is_my_domain($addr)
-{
-    global $conf;
-
-    if (isset($conf['filter']['verify_subdomains'])) {
-        $verify_subdomains = $conf['filter']['verify_subdomains'];
-    } else {
-        $verify_subdomains = true;
-    }
-
-    if (isset($conf['filter']['email_domain'])) {
-        $email_domain = $conf['filter']['email_domain'];
-    } else {
-        $email_domain = 'localhost';
-    }
-
-    $domains = (array) $email_domain;
-  
-    $adrs = imap_rfc822_parse_adrlist($addr, $email_domain);
-    foreach ($adrs as $adr) {
-        $adrdom = $adr->host;
-        if (empty($adrdom)) {
-            continue;
-        }
-        foreach ($domains as $dom) {
-            if ($dom == $adrdom) {
-                return true;
-            }
-            if ($verify_subdomains && substr($adrdom, -strlen($dom)-1) == ".$dom") {
-                return true;
-            }
-        }
-    }
-    return false;
 }
 
 /** Returns the format string used to rewrite

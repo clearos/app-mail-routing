@@ -20,7 +20,6 @@ Requires: app-smtp-core
 Requires: cyrus-sasl-plain
 Requires: php-pear-Net-LMTP
 Requires: php-pear-Net-SMTP
-Requires: webconfig-php-imap
 
 %description core
 The Mail Routing provides on the file route handling for various mail apps.

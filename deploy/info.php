@@ -34,7 +34,6 @@ $app['core_requires'] = array(
     'cyrus-sasl-plain',
     'php-pear-Net-LMTP',
     'php-pear-Net-SMTP',
-    'webconfig-php-imap',
 );
 
 $app['core_directory_manifest'] = array(
