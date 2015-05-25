@@ -153,9 +153,23 @@ class Filter_Content extends \Filter
         }
 
         if (file_exists('/var/clearos/mail_archive/enabled')) {
-            $msg_filename = '/var/clearos/mail_archive/messages/' . date('Ymd_Hi', time()) . '_' . rand(0, 10000);
+            if ($this->_id == '')
+                $msgid = "COS_ARCHIVE_" . date('Ymd_Hi', time()) . '_' . rand(0, 10000);
+            else
+                $msgid = md5($this->_id);
+
+            $msg_filename = '/var/clearos/mail_archive/messages/' . $msgid;
+
             if (!file_exists($msg_filename))
                 copy($this->_tmpfile, $msg_filename);
+                
+            // Archive db uses unique field 'message ID', so provide one if not present
+            if ($this->_id == '')
+                exec("/bin/sed -i -e 's/^\(Subject:.*\)$/Message-ID: $msgid\\n\\1/i' " . $msg_filename);
+
+            // We'll use this custom header to populate delivered-to address in database metadata
+            $delivered_to = implode(',', $this->_recipients);
+            exec("/bin/sed -i -e 's/^\(Message-Id:.*\)$/X-Clear-Delivered-To-" . rand(0, 1000) . ": $delivered_to \\n\\1/i' " . $msg_filename);
         }
 
         $result = $this->deliver($rewrittenfrom);
