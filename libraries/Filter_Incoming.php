@@ -116,7 +116,7 @@ class Filter_Incoming extends \Filter
             }
             if (@fwrite($this->_tmpfh, $buffer) === false) {
                 $msg = $php_errormsg;
-                return \PEAR::raiseError(sprintf(_("Error: Could not write to %s: %s"),
+                return $this->_pear->raiseError(sprintf(_("Error: Could not write to %s: %s"),
                                                 $this->_tmpfile, $msg),
                                         OUT_LOG | EX_TEMPFAIL);
             }
@@ -124,7 +124,7 @@ class Filter_Incoming extends \Filter
 
         if (@fclose($this->_tmpfh) === false) {
             $msg = $php_errormsg;
-            return \PEAR::raiseError(sprintf(_("Error: Failed closing %s: %s"),
+            return $this->_pear->raiseError(sprintf(_("Error: Failed closing %s: %s"),
                                             $this->_tmpfile, $msg),
                                     OUT_LOG | EX_TEMPFAIL);
         }
@@ -157,7 +157,7 @@ class Filter_Incoming extends \Filter
         $tmpf = @fopen($this->_tmpfile, 'r');
         if (!$tmpf) {
             $msg = $php_errormsg;
-            return \PEAR::raiseError(sprintf(_("Error: Could not open %s for writing: %s"),
+            return $this->_pear->raiseError(sprintf(_("Error: Could not open %s for writing: %s"),
                                             $this->_tmpfile, $msg),
                                     OUT_LOG | EX_TEMPFAIL);
         }

@@ -130,7 +130,7 @@ class Filter_Content extends \Filter
             }
             if (@fwrite($this->_tmpfh, $buffer) === false) {
                 $msg = $php_errormsg;
-                return \PEAR::raiseError(sprintf(_("Error: Could not write to %s: %s"),
+                return $this->_pear->raiseError(sprintf(_("Error: Could not write to %s: %s"),
                                                 $this->_tmpfile, $msg),
                                         OUT_LOG | EX_IOERR);
             }
@@ -139,7 +139,7 @@ class Filter_Content extends \Filter
             $buffer = fread($inh, 8192);
             if (@fwrite($this->_tmpfh, $buffer) === false) {
                 $msg = $php_errormsg;
-                return \PEAR::raiseError(sprintf(_("Error: Could not write to %s: %s"),
+                return $this->_pear->raiseError(sprintf(_("Error: Could not write to %s: %s"),
                                                 $this->_tmpfile, $msg),
                                         OUT_LOG | EX_IOERR);
             }
@@ -147,7 +147,7 @@ class Filter_Content extends \Filter
 
         if (@fclose($this->_tmpfh) === false) {
             $msg = $php_errormsg;
-            return \PEAR::raiseError(sprintf(_("Error: Failed closing %s: %s"),
+            return $this->_pear->raiseError(sprintf(_("Error: Failed closing %s: %s"),
                                             $this->_tmpfile, $msg),
                                     OUT_LOG | EX_IOERR);
         }
@@ -193,7 +193,7 @@ class Filter_Content extends \Filter
 
         set_error_handler('\clearos\apps\mail_routing\ignore_error');
         if ($smtptest = new \Net_SMTP('127.0.0.1', '10024')) {
-            if (!(\PEAR::isError($e = $smtptest->connect()))) {
+            if (!($this->_pear->isError($e = $smtptest->connect()))) {
                  $port = 10025;
                  $smtptest->disconnect();
             }
@@ -207,7 +207,7 @@ class Filter_Content extends \Filter
         $tmpf = @fopen($this->_tmpfile, 'r');
         if (!$tmpf) {
             $msg = $php_errormsg;
-            return \PEAR::raiseError(sprintf(_("Error: Could not open %s for writing: %s"),
+            return $this->_pear->raiseError(sprintf(_("Error: Could not open %s for writing: %s"),
                                             $this->_tmpfile, $msg),
                                     OUT_LOG | EX_IOERR);
         }
@@ -259,7 +259,7 @@ class Filter_Content extends \Filter
             $result = $transport->data($buffer);
             // TODO: this seem to generate false positives?  LMTP only?
             /*
-            if ($result instanceof PEAR_Error) {
+            if ($result instanceof \PEAR_Error) {
                 return $this->_rewriteCode($result);
             }
             */

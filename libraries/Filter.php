@@ -96,6 +96,7 @@ class Filter
     var $_client_address;
     var $_fqhostname;
     var $_sasl_username;
+    var $_pear;
 
     function Filter($transport = 'StdOut', $debug = false)
     {
@@ -124,17 +125,19 @@ class Filter
 
         /* Set a custom PHP error handler to catch any coding errors */
         set_error_handler(array($this, '_fatal'));
+
+	$this->_pear = new \PEAR();
     }
 
     function parse($inh = STDIN)
     {
         $result = $this->_start();
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             $this->_handle($result);
         }
 
         $result = $this->_parse($inh);
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             $this->_handle($result);
         }
 
@@ -148,13 +151,13 @@ class Filter
     {
         /* Setup the temporary storage */
         $result = $this->_initTmp();
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             return $result;
         }
         
         /* Parse our arguments */
         $result = $this->_parseArgs();
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             return $result;
         }
 
@@ -206,7 +209,7 @@ class Filter
 
         if (!array_key_exists('r', $options) ||
             !array_key_exists('s', $options)) {
-            return PEAR::raiseError(sprintf(_("Usage is %s -s sender@domain -r recipient@domain"),
+            return $this->_pear->raiseError(sprintf(_("Usage is %s -s sender@domain -r recipient@domain"),
                                              $args[0]),
                                      OUT_STDOUT | EX_USAGE);
         }
@@ -254,7 +257,7 @@ class Filter
         $this->_tmpfh = @fopen($this->_tmpfile, "w");
         if( !$this->_tmpfh ) {
             $msg = $php_errormsg;
-            return PEAR::raiseError(sprintf(_("Error: Could not open %s for writing: %s"),
+            return $this->_pear->raiseError(sprintf(_("Error: Could not open %s for writing: %s"),
                                             $this->_tmpfile, $msg),
                                     OUT_LOG | EX_IOERR);
         }
@@ -281,7 +284,7 @@ class Filter
             $transport = new $class($host, $port);
             return $transport;
         }
-        return PEAR::raiseError(sprintf(_("No such class \"%s\""), $class),
+        return $this->_pear->raiseError(sprintf(_("No such class \"%s\""), $class),
                                 OUT_LOG | EX_CONFIG);
     }
 

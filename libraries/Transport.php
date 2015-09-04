@@ -33,22 +33,24 @@ class Transport
     var $port;
     var $transport;
     var $got_newline;
+    var $pear;
 
     function Transport($host = '127.0.0.1', $port = 2003)
     {
         $this->host = $host;
         $this->port = $port;
         $this->transport = false;
+	$this->pear = new \PEAR();
     }
 
     function &createTransport() { 
-        return PEAR::raiseError(_("Abstract method Transport::createTransport() called!"));
+        return $pear->raiseError(_("Abstract method Transport::createTransport() called!"));
     }
 
     function start($sender, $recips)
     {
         $transport = $this->createTransport();
-        if ($transport instanceof PEAR_Error) {
+        if ($transport instanceof \PEAR_Error) {
             return $transport;
         }
         $this->transport = $transport;
@@ -57,14 +59,14 @@ class Transport
         $this->got_newline = true;
 
         $result = $this->transport->connect();
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             return $result;
         }
         
         $result = $this->transport->mailFrom($sender);
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             $resp = $this->transport->getResponse();
-            return PEAR::raiseError(sprintf(_("Failed to set sender: %s, code=%s"),
+            return $pear->raiseError(sprintf(_("Failed to set sender: %s, code=%s"),
                                             $resp[1], $resp[0]), $resp[0]);
         }
     
@@ -75,9 +77,9 @@ class Transport
         $reciperrors = array();
         foreach ($recips as $recip) {
             $result = $this->transport->rcptTo($recip);
-            if ($result instanceof PEAR_Error) {
+            if ($result instanceof \PEAR_Error) {
                 $resp = $this->transport->getResponse();
-                $reciperrors[] = PEAR::raiseError(sprintf(_("Failed to set recipient: %s, code=%s"),
+                $reciperrors[] = $pear->raiseError(sprintf(_("Failed to set recipient: %s, code=%s"),
                                                           $resp[1], $resp[0]), $resp[0]);
             }
         }
@@ -94,12 +96,12 @@ class Transport
         }
 
         $result = $this->transport->_put('DATA');
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             return $result;
         }
 
         $result = $this->transport->_parseResponse(354);
-        if ($result instanceof PEAR_Error) {
+        if ($result instanceof \PEAR_Error) {
             return $result;
         }
         
@@ -127,7 +129,7 @@ class Transport
                 $code = $err->code;
             }
         }
-        return new PEAR_Error($msg, $code, null, null, $reciperrors);  
+        return new \PEAR_Error($msg, $code, null, null, $reciperrors);  
     }
 
     /* Modified implementation from Net_SMTP that supports
