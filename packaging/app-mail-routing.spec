@@ -1,7 +1,7 @@
 
 Name: app-mail-routing
 Epoch: 1
-Version: 2.1.8
+Version: 2.1.20
 Release: 1%{dist}
 Summary: Mail Routing - Core
 License: LGPLv3
@@ -19,7 +19,7 @@ Requires: app-network-core
 Requires: app-smtp-core
 Requires: cyrus-sasl-plain
 Requires: php-pear-Net-LMTP
-Requires: php-pear-Net-SMTP
+Requires: php-pear-Net-SMTP >= 1.7.1
 
 %description core
 The Mail Routing provides on the file route handling for various mail apps.

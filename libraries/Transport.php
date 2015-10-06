@@ -95,16 +95,24 @@ class Transport
                                             _("Delivery to all recipients failed!"));
         }
 
-        $result = $this->transport->_put('DATA');
-        if ($result instanceof \PEAR_Error) {
-            return $result;
+        // Pear SMTP >= 1.7.x versus Pear SMTP < 1.7.x and LMTP
+        if (method_exists($this->transport, 'command')) {
+            $result = $this->transport->command('DATA', 354);
+            if ($result instanceof \PEAR_Error) {
+                return $result;
+            }
+        } else {
+            $result = $this->transport->_put('DATA');
+            if ($result instanceof \PEAR_Error) {
+                return $result;
+            }
+
+            $result = $this->transport->_parseResponse(354);
+            if ($result instanceof \PEAR_Error) {
+                return $result;
+            }
         }
 
-        $result = $this->transport->_parseResponse(354);
-        if ($result instanceof \PEAR_Error) {
-            return $result;
-        }
-        
         if (!empty($reciperrors)) {
             return $this->createErrorObject($reciperrors,
                                             _("Delivery to some recipients failed!"));
@@ -159,7 +167,13 @@ class Transport
 
     function data($data) {
         $this->quotedataline($data);
-        $result = $this->transport->_send($data);
+
+        // Pear SMTP >= 1.7.x versus Pear SMTP < 1.7.x and LMTP
+        if (method_exists($this->transport, 'my_send'))
+            $result = $this->transport->my_send($data);
+        else
+            $result = $this->transport->_send($data);
+
         if ($result instanceof \PEAR_Error) {
             return $result;
         }
@@ -175,7 +189,12 @@ class Transport
             $dot = "\r\n.\r\n";
         }
         
-        $result = $this->transport->_send($dot);
+        // Pear SMTP >= 1.7.x versus Pear SMTP < 1.7.x and LMTP
+        if (method_exists($this->transport, 'my_send'))
+            $result = $this->transport->my_send($dot);
+        else
+            $result = $this->transport->_send($dot);
+
         if ($result instanceof \PEAR_Error) {
             return $result;
         }
@@ -216,7 +235,7 @@ class Transport_SMTP extends Transport
     function &createTransport()
     {
         require_once 'Net/SMTP.php';
-        $transport = new Net_SMTP($this->host, $this->port);
+        $transport = new My_Net_SMTP($this->host, $this->port);
         return $transport;
     }
 }
@@ -302,6 +321,21 @@ class Transport_Drop extends Transport
     {
         $transport = new DropWrapper();
         return $transport;
+    }
+}
+
+// php-pear-Net-SMTP is s dependency, so it will always be installd
+require_once 'Net/SMTP.php';
+class My_Net_SMTP extends Net_SMTP
+{
+    public function __construct($host = null, $port = null, $localhost = null, $pipelining = false, $timeout = 0, $socket_options = null
+    ) {
+        parent::__construct($host, $port, $localhost, $pipelining, $timeout, $socket_options);
+    }
+
+    function my_send($data)
+    {
+        return $this->send($data);
     }
 }
 

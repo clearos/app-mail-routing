@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 $app['basename'] = 'mail_routing';
-$app['version'] = '2.1.8';
+$app['version'] = '2.1.20';
 $app['release'] = '1';
 $app['vendor'] = 'ClearFoundation';
 $app['packager'] = 'ClearFoundation';
@@ -33,7 +33,7 @@ $app['core_requires'] = array(
     'app-smtp-core',
     'cyrus-sasl-plain',
     'php-pear-Net-LMTP',
-    'php-pear-Net-SMTP',
+    'php-pear-Net-SMTP >= 1.7.1',
 );
 
 $app['core_directory_manifest'] = array(
