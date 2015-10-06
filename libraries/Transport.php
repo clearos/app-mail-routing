@@ -44,7 +44,7 @@ class Transport
     }
 
     function &createTransport() { 
-        return $pear->raiseError(_("Abstract method Transport::createTransport() called!"));
+        return $this->pear->raiseError(_("Abstract method Transport::createTransport() called!"));
     }
 
     function start($sender, $recips)
@@ -66,7 +66,7 @@ class Transport
         $result = $this->transport->mailFrom($sender);
         if ($result instanceof \PEAR_Error) {
             $resp = $this->transport->getResponse();
-            return $pear->raiseError(sprintf(_("Failed to set sender: %s, code=%s"),
+            return $this->pear->raiseError(sprintf(_("Failed to set sender: %s, code=%s"),
                                             $resp[1], $resp[0]), $resp[0]);
         }
     
@@ -79,7 +79,7 @@ class Transport
             $result = $this->transport->rcptTo($recip);
             if ($result instanceof \PEAR_Error) {
                 $resp = $this->transport->getResponse();
-                $reciperrors[] = $pear->raiseError(sprintf(_("Failed to set recipient: %s, code=%s"),
+                $reciperrors[] = $this->pear->raiseError(sprintf(_("Failed to set recipient: %s, code=%s"),
                                                           $resp[1], $resp[0]), $resp[0]);
             }
         }
