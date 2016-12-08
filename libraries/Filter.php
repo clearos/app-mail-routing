@@ -121,12 +121,12 @@ class Filter
         $this->_debug = $debug;
 
         $this->_startts = $this->_microtime_float();
-	    $this->_tmpdir = sys_get_temp_dir();
+        $this->_tmpdir = sys_get_temp_dir();
 
         /* Set a custom PHP error handler to catch any coding errors */
         set_error_handler(array($this, '_fatal'));
 
-	$this->_pear = new \PEAR();
+        $this->_pear = new \PEAR();
     }
 
     function parse($inh = STDIN)
@@ -160,6 +160,34 @@ class Filter
         if ($result instanceof \PEAR_Error) {
             return $result;
         }
+
+    /* ClearFoundation - Catch weird duplicate/aliasing issue
+       Note: though e-mail messages can have multiple recipients, the problematic
+       e-mails only have a single recipient - the forwarded e-mail address.  This is
+       also true for multiple forwarded addresses (one e-mail per forward address)
+    */
+
+    if (file_exists('/etc/postfix/searchdomains')) {
+
+        // Create a list of valid local domains
+        $local_domains = Array();
+        $raw_contents = file_get_contents('/etc/postfix/searchdomains');
+        $contents = explode("\n", $raw_contents);
+
+            foreach ($contents as $line) {
+            $domain = preg_replace('/\s+.*/', '', $line);
+            if ($domain)
+                $local_domains[] = $domain;
+        }
+
+        // Bail if recipient is not local
+        $recipient_domain = preg_replace('/.*@/', '', $this->_recipients[0]);
+
+        if (!in_array($recipient_domain, $local_domains)) {
+            clearos_log("mailfilter", "dropping duplicate forwarder: " . $this->_recipients[0]);
+            exit(0);
+        }
+    }
 
         clearos_log("mailfilter", sprintf(_("starting up (sender=%s, recipients=%s, client_address=%s)"), 
                                   $this->_sender, 
