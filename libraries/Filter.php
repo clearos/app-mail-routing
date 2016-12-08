@@ -167,7 +167,7 @@ class Filter
        also true for multiple forwarded addresses (one e-mail per forward address)
     */
 
-    if (file_exists('/etc/postfix/searchdomains')) {
+    if (file_exists('/etc/postfix/searchdomains') && file_exists('/var/clearos/mail_routing/forwarders')) {
 
         // Create a list of valid local domains
         $local_domains = Array();
