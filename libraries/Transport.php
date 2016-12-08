@@ -198,9 +198,12 @@ class Transport
         if ($result instanceof \PEAR_Error) {
             return $result;
         }
-        $result = $this->transport->_parseResponse(250);
-        if ($result instanceof \PEAR_Error) {
-            return $result;
+
+        if (method_exists($this->transport, '_parseResponse')) {
+            $result = $this->transport->_parseResponse(250);
+            if ($result instanceof \PEAR_Error) {
+                return $result;
+            }
         }
         $this->transport->disconnect();
         $this->transport = false;
